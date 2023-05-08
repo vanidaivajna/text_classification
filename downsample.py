@@ -35,3 +35,32 @@ for i in range(len(data)):
 
 # Print the updated DataFrame
 print(data)
+
+
+
+import pandas as pd
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+import numpy as np
+
+# Example data
+data = pd.DataFrame({'humantext': ['The quick brown fox jumps over the lazy dog.',
+                                 'The quick brown fox jumps over the lazy dog and runs away.',
+                                 'A brown dog and a black dog are playing together.',
+                                 'My sister is fond of chocolate cake.',
+                                 'I enjoy reading books in my free time.'],
+                    'intent': ['a', 'a', 'b', 'b', 'b']})
+
+# Initialize the TF-IDF vectorizer
+vectorizer = TfidfVectorizer()
+
+# Set up the threshold distribution
+thresholds = np.linspace(0.2, 0.8, num=7)
+
+# Iterate over unique intents in the data
+for intent in data['intent'].unique():
+    # Select rows corresponding to the current intent
+    intent_data = data[data['intent'] == intent]
+    # Compute the TF-IDF matrix for the sentences
+    tfidf_matrix = vectorizer.fit_transform(intent_data['humantext'])
+    # Compute the cosine similarity matrix between the sentences

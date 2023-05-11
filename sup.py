@@ -181,5 +181,39 @@ def search_nearest_neighbors(query_text):
 
 # Example usage of the search interface
 search_nearest_neighbors("your_query_text")
+#-----------------------------
+# Get the nearest neighbors for a word
+word = "example_word"
+k = 10  # Number of nearest neighbors to retrieve
+neighbors = model.get_nearest_neighbors(word, k)
 
+# Extract the word vectors for the neighbors
+word_vectors = []
+for neighbor in neighbors:
+    neighbor_word = neighbor[1]
+    word_vector = model.get_word_vector(neighbor_word)
+    word_vectors.append(word_vector)
+word_vectors = np.array(word_vectors)
+
+# Apply t-SNE for dimensionality reduction
+tsne = TSNE(n_components=2, random_state=42)
+word_vectors_tsne = tsne.fit_transform(word_vectors)
+
+# Create the plot
+plt.figure(figsize=(10, 8))
+plt.scatter(word_vectors_tsne[:, 0], word_vectors_tsne[:, 1], s=50)
+for i, neighbor in enumerate(neighbors):
+    plt.annotate(neighbor[1], (word_vectors_tsne[i, 0], word_vectors_tsne[i, 1]))
+
+plt.show()
+In this example, you load your FastText model using fasttext.load_model(). Then, you use model.get_nearest_neighbors() to retrieve the nearest neighbors for a specific word. After that, you extract the word vectors for the neighbors using model.get_word_vector(). Next, t-SNE is applied for dimensionality reduction, and finally, the nearest neighbors are plotted using matplotlib.
+
+Make sure to replace 'your_model.bin' with the path to your actual FastText model file. Also, modify 'example_word' with the word for which you want to find the nearest neighbors, and adjust the value of k to determine the number of nearest neighbors to retrieve.
+
+
+
+
+
+
+Regenerate response
 
